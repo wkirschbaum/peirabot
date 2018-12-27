@@ -16,10 +16,12 @@ commandHello (BotInput input time rNum)
   where greeting = getGreeting (greetingForDay time) rNum
 
 commandBye :: BotInput -> BotAction
-commandBye (BotInput input _ _)
-  | "bye" == input = BotResult 10 "Bye, see you later."
-  | "cheers" == input = BotResult 5 "Cheers, laters."
+commandBye (BotInput input time rNum)
+  | "bye" == input = BotResult 10 goodbye
+  | "cheers" == input = BotResult 5 goodbye
+  | "laters" == input = BotResult 5 goodbye
   | otherwise = BotNoResult
+  where goodbye = getGoodbye (greetingForDay time) rNum
 
 data DaySection = Morning | Afternoon | Evening deriving (Eq, Ord)
 
@@ -54,4 +56,23 @@ getGreeting Evening num =
     "Good evening!",
     "Hi.",
     "Hey there."
+  ]
+
+getGoodbye :: DaySection -> Int -> String
+getGoodbye Morning num =
+  pickFromList num [
+    "Have a good day",
+    "Laters",
+    "Cheers"
+  ]
+getGoodbye Afternoon num =
+  pickFromList num [
+    "Enjoy the rest of your day.",
+    "Enjoy your afternoon",
+    "Keep well"
+  ]
+getGoodbye Evening num =
+  pickFromList num [
+    "See you tomorrow",
+    "Ciao."
   ]
