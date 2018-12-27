@@ -1,18 +1,24 @@
 module Main where
 
-import Lib
-import Data.List
-import Control.Monad
-import Data.Char
-import Data.Foldable (asum)
-
-type Score = Int
-type Output = String
-data BotAction = BotNoResult | BotStop Output | BotResult Score Output deriving (Show)
+import           Bot
+import           Data.List
+import           System.IO
 
 main :: IO ()
 main = do
+  intro
+  repLoop
+
+intro :: IO ()
+intro = do
+  putStrLn "I am ready."
+
+-- TODO:  add context in the repl
+
+repLoop :: IO ()
+repLoop = do
   putStr "> "
+  hFlush stdout
   l <- getLine
   case command l of
     BotStop r -> do
@@ -20,36 +26,32 @@ main = do
       return ()
     BotResult _ r -> do
       putStrLn r
-      main
-    _ -> main
+      repLoop
+    _ -> repLoop
 
 command :: String -> BotAction
 command input = maximum $ ($ input) <$> [
+  commandStop,
   commandHello,
-  commandStop
+  commandBye
   ]
-
-commandHello :: String -> BotAction
-commandHello input
-  | "hi" `isPrefixOf` input = BotResult 1 "Hello :)"
-  | otherwise = BotNoResult
 
 commandStop :: String -> BotAction
 commandStop input
   | "quit" == input = BotStop "goodbye"
   | otherwise = BotNoResult
 
+commandHello :: String -> BotAction
+commandHello input
+  | "hi" `isPrefixOf` input = BotResult 2 "Hi :)"
+  | "hello" `isPrefixOf` input = BotResult 2 "Hello :)"
+  | "morning" == input  = BotResult 10 "Hello :)"
+  | "evening" == input  = BotResult 10 "Hello :)"
+  | "afternoon" == input  = BotResult 10 "Hello :)"
+  | otherwise = BotNoResult
 
-instance Eq BotAction where
-  BotStop _ == BotStop _ = True
-  BotNoResult == BotNoResult = True
-  (BotResult s1 _) == (BotResult s2 _) = s1 == s2
-
-instance Ord BotAction where
-  compare (BotStop _) _ = GT
-  compare BotNoResult _ = LT
-  compare (BotResult _ _) BotNoResult = GT
-  compare (BotResult s1 _) (BotResult s2 _)
-    | s1 > s2 = GT
-    | s1 == s2 = EQ
-    | otherwise = LT
+commandBye :: String -> BotAction
+commandBye input
+  | "bye" == input = BotResult 10 "Bye, see you later."
+  | "cheers" == input = BotResult 5 "Cheers, laters."
+  | otherwise = BotNoResult
