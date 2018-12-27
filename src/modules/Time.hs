@@ -2,5 +2,9 @@ module Modules.Time
     ( commandTime
     ) where
 
-someFunc :: String ->
-someFunc = putStrLn "someFunc"
+import           Bot
+
+commandTime :: String -> BotAction
+commandTime input
+  | "time" == input = BotResult 10 "It's time"
+  | otherwise = BotNoResult
