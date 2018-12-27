@@ -1,10 +1,12 @@
 module Main where
 
-import           Bot
-import           Modules.Greet
-import           Modules.Quit
-import           Modules.Time
+import           Data.Time.LocalTime
+import           Peirabot.Bot
+import           Peirabot.Modules.Greet
+import           Peirabot.Modules.Quit
+import           Peirabot.Modules.Utilities
 import           System.IO
+import           System.Random
 
 main :: IO ()
 main = do
@@ -15,14 +17,14 @@ intro :: IO ()
 intro = do
   putStrLn "I am ready."
 
--- TODO:  add context in the repl
-
 repLoop :: IO ()
 repLoop = do
   putStr "> "
   hFlush stdout
   l <- getLine
-  case command l of
+  t <- getZonedTime
+  r <- getStdRandom (randomR (1,1000000)) -- Somehow allow this to have dynamic size
+  case command (BotInput l t r) of
     BotStop r -> do
       putStrLn r
       return ()
@@ -31,10 +33,11 @@ repLoop = do
       repLoop
     _ -> repLoop
 
-command :: String -> BotAction
+command :: BotInput -> BotAction
 command input = maximum $ ($ input) <$> [
   commandStop,
   commandHello,
   commandTime,
+  commandRandom,
   commandBye
   ]

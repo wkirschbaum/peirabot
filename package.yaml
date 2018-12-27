@@ -21,9 +21,16 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- time
+- random
 
 library:
   source-dirs: src
+  exposed-modules:
+    - Peirabot.Bot
+    - Peirabot.Modules.Greet
+    - Peirabot.Modules.Utilities
+    - Peirabot.Modules.Quit
 
 executables:
   peirabot-exe:
