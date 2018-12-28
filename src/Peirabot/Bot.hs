@@ -5,6 +5,7 @@ module Peirabot.Bot (
   BotInput(..)
   ) where
 
+import           Data.Text.Metrics
 import           Data.Time.LocalTime
 
 type Score = Int
