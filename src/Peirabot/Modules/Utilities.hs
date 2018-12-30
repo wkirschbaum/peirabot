@@ -6,11 +6,19 @@ import           Data.Time.Format
 import           Peirabot.Bot
 
 commandTime :: BotInput -> BotAction
-commandTime (BotInput input time _)
-  | "time" == input = BotResult 10 (formatTime defaultTimeLocale "%d %B %Y %R" time)
+commandTime (BotInput input)
+  | "time" == input = BotResult 10 displayTime
   | otherwise = BotNoResult
 
 commandRandom :: BotInput -> BotAction
-commandRandom (BotInput input _ random)
-  | "random" == input = BotResult 10 (show random)
+commandRandom (BotInput input)
+  | "random" == input = BotResult 10 displayRandom
   | otherwise = BotNoResult
+
+displayTime :: BotContext -> IO String
+displayTime BotContext{time=time} = do
+  return (formatTime defaultTimeLocale "%d %B %Y %R" time)
+
+displayRandom :: BotContext -> IO String
+displayRandom BotContext{randomNumber=random} = do
+  return (show random)
