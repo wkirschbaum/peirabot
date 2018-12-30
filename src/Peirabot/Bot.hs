@@ -34,5 +34,12 @@ instance Ord BotAction where
   (BotStop _) `compare` _ = GT
   _ `compare` (BotStop _) = LT
   
-data BotContext = BotContext {time :: ZonedTime, randomNumber :: Int}
+data BotContext = BotContext {
+  time :: ZonedTime,
+  randomNumber :: Int,
+  input :: String}
+  
 data BotInput = BotInput String
+
+data BotString = BotStringMatch String
+               | BotStringStartWith String

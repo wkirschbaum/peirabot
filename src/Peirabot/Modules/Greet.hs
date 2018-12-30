@@ -29,6 +29,14 @@ goodbye :: BotContext -> IO String
 goodbye BotContext{time=time,randomNumber=random} = do
   return $ getGoodbye (greetingForDay time) random
 
+newCommandHello :: [(String, Output)]
+newCommandHello =
+  [("hi", greeting),
+   ("hello", greeting),
+   ("morning", greeting),
+   ("evening", greeting),
+   ("afternoon", greeting)]
+
 data DaySection = Morning | Afternoon | Evening deriving (Eq, Ord)
 
 greetingForDay :: ZonedTime -> DaySection

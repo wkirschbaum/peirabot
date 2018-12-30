@@ -20,12 +20,13 @@ intro = do
 repLoop :: IO ()
 repLoop = do
   putStr "> "
+  -- ensure buffer is clear before receiving input
   hFlush stdout
-  c <- context
   l <- getLine
   case command (BotInput l) of
     BotResult _ action -> do
-      result <- action c
+      context <- (getContext l)
+      result <- action context
       putStrLn result
       repLoop
     BotStop r -> do
@@ -41,15 +42,8 @@ command input = maximum $ ($ input) <$> [
   commandRandom
   ]
 
-topAction :: BotAction -> BotAction -> BotAction
-topAction BotNoResult right = right
-topAction left BotNoResult = left
-topAction (BotStop x) _ = BotStop x
-topAction _ (BotStop x) = BotStop x
-  
-
-context :: IO BotContext
-context = do
+getContext :: String -> IO BotContext
+getContext i = do
   t <- getZonedTime
   r <- getStdRandom (randomR (1,1000000))
-  return BotContext { time = t, randomNumber = r}
+  return BotContext { time = t, randomNumber = r, input = i}
