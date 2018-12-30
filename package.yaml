@@ -31,7 +31,6 @@ library:
     - Peirabot.Bot
     - Peirabot.Modules.Greet
     - Peirabot.Modules.Utilities
-    - Peirabot.Modules.Quit
 
 executables:
   peirabot-exe:

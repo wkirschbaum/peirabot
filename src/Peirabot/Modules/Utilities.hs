@@ -1,19 +1,16 @@
 module Peirabot.Modules.Utilities
-    ( commandTime, commandRandom
+    ( commandUtilities
     ) where
 
 import           Data.Time.Format
 import           Peirabot.Bot
 
-commandTime :: BotInput -> BotAction
-commandTime (BotInput input)
-  | "time" == input = BotResult 10 displayTime
-  | otherwise = BotNoResult
-
-commandRandom :: BotInput -> BotAction
-commandRandom (BotInput input)
-  | "random" == input = BotResult 10 displayRandom
-  | otherwise = BotNoResult
+commandUtilities :: [BotMatch]
+commandUtilities =
+  [
+    (BotStringMatch "time", displayTime),
+    (BotStringMatch "random", displayRandom)
+  ]
 
 displayTime :: BotContext -> IO String
 displayTime BotContext{time=time} = do

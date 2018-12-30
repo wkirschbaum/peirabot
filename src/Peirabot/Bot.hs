@@ -1,9 +1,10 @@
 module Peirabot.Bot (
   Score,
   Output,
+  BotMatch,
   BotAction(..),
-  BotInput(..),
-  BotContext(..)
+  BotContext(..),
+  BotString(..)
   ) where
 
 import           Data.Text.Metrics
@@ -39,7 +40,7 @@ data BotContext = BotContext {
   randomNumber :: Int,
   input :: String}
   
-data BotInput = BotInput String
-
+type BotMatch = (BotString, Output)
 data BotString = BotStringMatch String
                | BotStringStartWith String
+               deriving (Show)

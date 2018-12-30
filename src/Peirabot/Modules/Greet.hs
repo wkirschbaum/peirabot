@@ -1,41 +1,36 @@
 module Peirabot.Modules.Greet
-  (commandHello, commandBye) where
+  (commandBye, commandHello)
+where
 
 import           Data.List
 import           Data.Time.LocalTime
 import           Peirabot.Bot
 
-commandHello :: BotInput -> BotAction
-commandHello (BotInput input)
-  | "hi" `isPrefixOf` input = BotResult 10 greeting
-  | "hello" `isPrefixOf` input = BotResult 10 greeting
-  | "morning" == input  =  BotResult 10 greeting
-  | "evening" == input  =  BotResult 10 greeting
-  | "afternoon" == input  =  BotResult 10 greeting
-  | otherwise = BotNoResult
-
 greeting :: BotContext -> IO String
 greeting BotContext{time=time,randomNumber=random} = do
   return (getGreeting (greetingForDay time) random)
 
-commandBye :: BotInput -> BotAction
-commandBye (BotInput input)
-  | "bye" == input = BotResult 10 goodbye
-  | "cheers" == input = BotResult 5 goodbye
-  | "laters" == input = BotResult 5 goodbye
-  | otherwise = BotNoResult
+commandHello :: [BotMatch]
+commandHello =
+  [
+    (BotStringMatch "hi", greeting),
+    (BotStringMatch "hello", greeting),
+    (BotStringMatch "morning", greeting),
+    (BotStringStartWith "evening", greeting),
+    (BotStringStartWith "afternoon", greeting)
+  ]
+
+commandBye :: [BotMatch]
+commandBye =
+  [
+    (BotStringMatch "bye", goodbye),
+    (BotStringMatch "cheers", goodbye),
+    (BotStringStartWith "later", goodbye)
+  ]
 
 goodbye :: BotContext -> IO String
 goodbye BotContext{time=time,randomNumber=random} = do
   return $ getGoodbye (greetingForDay time) random
-
-newCommandHello :: [(String, Output)]
-newCommandHello =
-  [("hi", greeting),
-   ("hello", greeting),
-   ("morning", greeting),
-   ("evening", greeting),
-   ("afternoon", greeting)]
 
 data DaySection = Morning | Afternoon | Evening deriving (Eq, Ord)
 
